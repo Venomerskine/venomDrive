@@ -25,3 +25,12 @@ model Session {
   data      String
   expiresAt DateTime
 }
+
+model File {
+  id        Int      @id @default(autoincrement())
+  filename  String
+  path      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}

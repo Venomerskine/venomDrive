@@ -10,6 +10,25 @@
         <div id="loginSection" class="login">
             <%- include('partials/login-form') %>
         </div>
+        <div id="signUpSection" class="signUp" style="display: none;">
+            <%- include('partials/signup-form') %>
+        </div>
+        <div class="toggle-btn">
+            <button id="toggleBtn">Switch to Sign Up</button>
+        </div>
     </div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleBtn');
+        const loginSection = document.getElementById('loginSection');
+        const sighUpSection = document.getElementById('signUpSection');
+
+        toggleBtn.addEventListener('click', () => {
+            const isLogin = loginSection.style.display != 'none';
+            loginSection.style.display = isLogin ? 'none' : 'block';
+            sighUpSection.style.display = isLogin ? 'block' : 'none';
+            toggleBtn.innerText = isLogin ? 'Switch to Login' : 'witch to Sign Up'
+        })
+    </script>
 </body>
 </html>

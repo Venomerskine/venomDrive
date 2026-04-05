@@ -6,13 +6,15 @@ import bcrypt from 'bcrypt';
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
-            const user = await prisma.user.findUnique({ where: { username } });
+            const user = await prisma.user.findUnique({ where: { email:username } });
+            console.log("User in passport:", user)
 
-            if (!user) return done(null, false);
+            if (!user){ 
+                return done(null, false, { message: "User not found" });}
 
             const match = await bcrypt.compare(password, user.password);
 
-            if (!match) return done(null, false);
+            if (!match) return done(null, false, {message: "Username password mismatch"});
 
             return done(null, user);
         } catch (err){

@@ -25,7 +25,7 @@ async function getHome(req, res) {
         }
     });
 
-    console.log("User in controller:", user)
+    // console.log("User in controller:", user)
     res.render('home', {user})
 }
 
@@ -34,9 +34,9 @@ async function registerUser(req, res) {
         const { email, password} = req.body;
         
         // Dunda wire testing
-        console.log("Req.body: ", req.body)
-        console.log("User Email:" ,email)
-        console.log("Password:", password)
+        // console.log("Req.body: ", req.body)
+        // console.log("User Email:" ,email)
+        // console.log("Password:", password)
 
         if(!email || !password){
             return res.status(400).send("Missing Fields")

@@ -20,26 +20,26 @@ router.post("/register", venomController.registerUser)
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
-    console.log("ERR:", err);
-    console.log("USER:", user);
-    console.log("INFO:", info);
+    // console.log("ERR:", err);
+    // console.log("USER:", user);
+    // console.log("INFO:", info);
 
     if (err) {
       return next(err);
     }
 
     if (!user) {
-      console.log("Login failed:", info);
+      // console.log("Login failed:", info);
       return res.redirect("/login");
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        console.log("Login session error:", err);
+        // console.log("Login session error:", err);
         return next(err);
       }
 
-      console.log("Login success:", user);
+      // console.log("Login success:", user);
       return res.redirect("/home");
     });
   })(req, res, next);
@@ -68,7 +68,7 @@ router.post(
       return res.status(400).send("No file uploaded");
     }
 
-    console.log("Req file in post: ", req.file.originalname)
+    // console.log("Req file in post: ", req.file.originalname)
 
     try {
       await prisma.file.create({

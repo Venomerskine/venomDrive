@@ -3,6 +3,7 @@ import passport from '../auth.js';
 import venomController from '../controllers/venomDriveController.js';
 import ensureAuth from '../middleware/auth.js';
 import {upload} from '../middleware/upload.js';
+import prisma from '../prisma.js';
 
 const router = express.Router();
 
@@ -67,6 +68,8 @@ router.post(
       return res.status(400).send("No file uploaded");
     }
 
+    console.log("Req file in post: ", req.file.originalname)
+
     try {
       await prisma.file.create({
         data: {
@@ -75,11 +78,9 @@ router.post(
           userId: req.user.id        
         }
       })
-      res.status(200).send("File uploaded successfully");
       res.redirect("/home");
     } catch(err){
       console.error("Error saving file to database:", err);
-      res.status(500).send("Server error while saving file");
       res.redirect("/home");
     }
 

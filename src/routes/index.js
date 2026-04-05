@@ -9,6 +9,8 @@ router.get("/", venomController.entryPoint);
 router.get("/login", venomController.getMemberAuth);
 router.get("/home", ensureAuth, venomController.getHome);
 
+router.post("/register", venomController.registerUser)
+
 router.post("/login", passport.authenticate("local", {
     successRedirect: "/home",
     failureRedirect: "/login"

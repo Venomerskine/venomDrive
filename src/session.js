@@ -1,6 +1,6 @@
 import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { prisma } from './prisma.js';
+import prisma from './prisma.js';
 
 export const sessionMiddleware = session ({
     secret: process.env.SESSION_SECRET,

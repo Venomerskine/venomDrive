@@ -11,6 +11,7 @@
     <ul>
         <% user.files.forEach(file => { %>
             <li><%= file.name %></li>
+            <a href="/uploads/<%= file.filename %>">Download</a>
         <% }); %>
     </ul>
 

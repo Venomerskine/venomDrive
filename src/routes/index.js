@@ -2,6 +2,7 @@ import express from 'express';
 import passport from '../auth.js';
 import venomController from '../controllers/venomDriveController.js';
 import ensureAuth from '../middleware/auth.js';
+import {upload} from '../middleware/upload.js';
 
 const router = express.Router();
 
@@ -51,5 +52,38 @@ router.post("/logout", (req, res) => {
 
 })
 
+router.post(
+  '/upload',
+  (req, res, next) => {
+    if(!req.isAuthenticated()){
+      return res.status(401).send("Unauthorized upload");
+    }
+    next()
+  },
+  upload.single('file'),
+  async (req, res) => {
+
+    if (!req.file) {
+      return res.status(400).send("No file uploaded");
+    }
+
+    try {
+      await prisma.file.create({
+        data: {
+          filename: req.file.originalname,
+          path: req.file.path,
+          userId: req.user.id        
+        }
+      })
+      res.status(200).send("File uploaded successfully");
+      res.redirect("/home");
+    } catch(err){
+      console.error("Error saving file to database:", err);
+      res.status(500).send("Server error while saving file");
+      res.redirect("/home");
+    }
+
+  }
+)
 
 export default router;

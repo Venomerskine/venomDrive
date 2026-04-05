@@ -14,11 +14,19 @@ async function entryPoint(req, res) {
 }
 
 async function getHome(req, res) {
-    if (req.isAuthenticated()) {
-        res.render("home.ejs");
-    } else {
-        res.redirect("/login");
+    if (!req.isAuthenticated()) {
+        return res.redirect("/login");
     }
+
+    const user = await prisma.user.findUnique({
+        where: { id: req.user.id},
+        include: {
+            files: true
+        }
+    });
+
+    console.log("User in controller:", user)
+    res.render('home', {user})
 }
 
 async function registerUser(req, res) {

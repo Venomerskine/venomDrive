@@ -6,6 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Am Home</h1>
+    <h1>Welcome, <%= user.email %>!</h1>
+    <h2>Your Files:</h2>
+    <ul>
+        <% user.files.forEach(file => { %>
+            <li><%= file.name %></li>
+        <% }); %>
+    </ul>
 </body>
 </html>

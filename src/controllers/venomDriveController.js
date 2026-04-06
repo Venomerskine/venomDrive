@@ -66,9 +66,49 @@ async function registerUser(req, res) {
     }
 }
 
+// Create Folder
+async function createFolder (req, res){
+    await prisma.folder.create({
+        data: {
+            name: req.body.name,
+            userId: req.user.id
+        }
+    })
+}
+
+// Read folder
+async function readFolder(req, res) {
+    const folders = await prisma.folder.findMany({
+        where: { userId: req.user.id },
+        include: { file: true }
+    });
+}
+
+// Update folder
+await prisma.folder.update({
+    where: {id: folderId},
+    data: { name: newName }
+})
+
+// Delete Folder
+await prisma.folder.delete({
+    where: { id: folderId}
+})
+
+// folder file upload
+await prisma.file.create({
+    data: {
+        filename: req.file.filename,
+        path: req.file.path,
+        userId: req.user.id,
+        folderId: req.body.folderId || null
+    }
+})
+
 export default {
     getMemberAuth,
     entryPoint,
     getHome,
-    registerUser
+    registerUser,
+    createFolder
 }   

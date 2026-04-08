@@ -113,11 +113,33 @@ async function readFolder(req, res) {
 
 // Update folder
 async function updateFolder(req, res) {
-    const { folderId, newName } = req.body;
-    await prisma.folder.update({
-        where: {id: folderId},
-        data: { name: newName }
-})
+    console.log("Update foldr req params: ", req.params)
+    const id = parseInt(req.params.folderId);
+
+    const department = await prisma.folder.findUnique({
+        where: { id }
+    });
+
+    if (!department) {
+        return res.status(404).send("Folder not found");
+    }
+
+    res.render("partials/edit-folder", { folder: department });
+}
+
+
+async function postFolderEdit(req, res) {
+    try {
+        const { folderId, newName } = req.body;
+        await prisma.folder.update({
+            where: {id: parseInt(folderId)},
+            data: { name: newName }
+        });
+        res.redirect("/home");
+    } catch (err) {
+        console.error("Error updating folder:", err);
+        res.status(500).send("Server Error!");
+     }
 }
 
 // Delete Folder
@@ -150,5 +172,6 @@ export default {
     readFolder,
     updateFolder,
     deleteFolder,
-    uploadFile
+    uploadFile,
+    postFolderEdit
 }   

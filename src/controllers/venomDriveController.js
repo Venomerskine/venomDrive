@@ -25,8 +25,11 @@ async function getHome(req, res) {
         }
     });
 
+    const folders = await getUserFolders(req.user.id);
+    console.log("User folders:", folders)
+
     // console.log("User in controller:", user)
-    res.render('home', {user})
+    res.render('home', {user, folders})
 }
 
 async function registerUser(req, res) {
@@ -68,20 +71,44 @@ async function registerUser(req, res) {
 
 // Create Folder
 async function createFolder (req, res){
+    console.log("Creating folder with name: ", req.body.folderName)
+    try {   
     await prisma.folder.create({
         data: {
-            name: req.body.name,
+            name: req.body.folderName,
             userId: req.user.id
+        }
+    })
+    res.redirect("/home");
+} catch(err){
+    console.error("Error creating folder:", err);
+}
+}
+
+// Read folder
+async function getUserFolders(userId) {
+    return await prisma.folder.findMany({
+        where: { userId },
+        include: {
+            files: true
         }
     })
 }
 
-// Read folder
 async function readFolder(req, res) {
-    const folders = await prisma.folder.findMany({
-        where: { userId: req.user.id },
-        include: { file: true }
+    const { folderId } = req.params;
+    const folder = await prisma.folder.findUnique({
+        where: { id: folderId },
+        include: {
+            files: true
+        }
     });
+
+    if (!folder) {
+        return res.status(404).send("Folder not found");
+    }
+
+    res.render("folder", { folder });
 }
 
 // Update folder
@@ -119,6 +146,7 @@ export default {
     getHome,
     registerUser,
     createFolder,
+    getUserFolders,
     readFolder,
     updateFolder,
     deleteFolder,

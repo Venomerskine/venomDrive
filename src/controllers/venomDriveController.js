@@ -85,30 +85,42 @@ async function readFolder(req, res) {
 }
 
 // Update folder
-await prisma.folder.update({
-    where: {id: folderId},
-    data: { name: newName }
+async function updateFolder(req, res) {
+    const { folderId, newName } = req.body;
+    await prisma.folder.update({
+        where: {id: folderId},
+        data: { name: newName }
 })
+}
 
 // Delete Folder
-await prisma.folder.delete({
+async function deleteFolder(req, res) {
+    const { folderId } = req.body;
+    await prisma.folder.delete({
     where: { id: folderId}
 })
+}
 
 // folder file upload
-await prisma.file.create({
-    data: {
-        filename: req.file.filename,
-        path: req.file.path,
-        userId: req.user.id,
-        folderId: req.body.folderId || null
+async function uploadFile(req, res) {
+    await prisma.file.create({
+        data: {
+            filename: req.file.filename,
+            path: req.file.path,
+            userId: req.user.id,
+            folderId: req.body.folderId || null
     }
 })
+}
 
 export default {
     getMemberAuth,
     entryPoint,
     getHome,
     registerUser,
-    createFolder
+    createFolder,
+    readFolder,
+    updateFolder,
+    deleteFolder,
+    uploadFile
 }   

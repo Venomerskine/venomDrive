@@ -98,7 +98,7 @@ async function getUserFolders(userId) {
 async function readFolder(req, res) {
     const { folderId } = req.params;
     const folder = await prisma.folder.findUnique({
-        where: { id: folderId },
+        where: { id: Number(folderId) },
         include: {
             files: true
         }
@@ -108,7 +108,7 @@ async function readFolder(req, res) {
         return res.status(404).send("Folder not found");
     }
 
-    res.render("folder", { folder });
+    res.render("partials/folder-details", { folder });
 }
 
 // Update folder

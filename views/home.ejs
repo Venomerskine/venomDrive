@@ -36,9 +36,9 @@
                     </ul>
                     <a href="/read-folder/<%= folder.id %>">View Folder</a>
                     <a href="/update-folder/<%= folder.id %>">Update Folder</a>
-                    <a href="/delete-folder/<%= folder.id %>" method="POST">
+                    <form action="/delete-folder/<%= folder.id %>" method="POST">
                         <button type="submit">Delete Folder</button>
-                    </a>
+                    </form>
                 </div>
             <% }); %>
         </ul>

@@ -26,7 +26,7 @@ async function getHome(req, res) {
     });
 
     const folders = await getUserFolders(req.user.id);
-    console.log("User folders:", folders)
+    // console.log("User folders:", folders)
 
     // console.log("User in controller:", user)
     res.render('home', {user, folders})
@@ -144,10 +144,20 @@ async function postFolderEdit(req, res) {
 
 // Delete Folder
 async function deleteFolder(req, res) {
-    const { folderId } = req.body;
-    await prisma.folder.delete({
-    where: { id: folderId}
-})
+
+    try {
+        const { folderId } = req.params;
+        console.log("Delete folder ID :", folderId)
+
+        await prisma.folder.delete({
+        where: { id: Number(folderId)}
+    });
+    res.redirect("/home")
+
+    } catch (err){
+        console.error("Error Deleting Folder")
+        res.status(500).send("Error deleting folder")
+    }
 }
 
 // folder file upload

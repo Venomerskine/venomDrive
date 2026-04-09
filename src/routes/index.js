@@ -91,7 +91,7 @@ router.post("/create-folder", ensureAuth, venomController.createFolder);
 router.get("/read-folder", ensureAuth, venomController.readFolder);
 router.get("/update-folder/:folderId", ensureAuth, venomController.updateFolder);
 router.post("/edit-folder", ensureAuth, venomController.postFolderEdit);
-router.post("/delete-folder", ensureAuth, venomController.deleteFolder);
+router.post("/delete-folder/:folderId", ensureAuth, venomController.deleteFolder);
 router.post("/upload-file", ensureAuth, venomController.uploadFile);
 
 export default router;

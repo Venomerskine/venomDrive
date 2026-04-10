@@ -176,13 +176,25 @@ async function uploadFile(req, res) {
     try {
         await prisma.file.update({
             where: { id: parseInt(req.body.fileId) },
-            data: {
-                folderId: req.body.folderId ? parseInt(req.body.folderId) : null
-            }
-        });
+            data: {folderId: folderId ? parseInt(folderId) : null  }
+                    });
+        console.log("folderId in uploadFile controller: ", req.body.folderId)
         res.redirect("/home");
     } catch (err) {
         console.error("Error uploading file:", err);
+        res.status(500).send("Server Error!");
+    }
+}
+
+async function moveFile(req, res) {
+    try {
+        await prisma.file.update({
+            where: { id: Number(req.body.fileId) },
+            data: { folderId: Number(req.body.folderId) }
+});
+        res.redirect("/home");
+    } catch (err) {
+        console.error("Error moving file:", err);
         res.status(500).send("Server Error!");
     }
 }
@@ -199,5 +211,6 @@ export default {
     deleteFolder,
     createAndUploadFile,
     uploadFile,
-    postFolderEdit
+    postFolderEdit,
+    moveFile
 }   

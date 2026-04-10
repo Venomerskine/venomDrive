@@ -22,5 +22,17 @@
         <input type="file" name="file" required>
         <button type="submit">Upload File</button>
     </form>
+
+        <h3>Add existing file</h3>
+
+            <% unfolderedFiles.forEach(file => { %>
+            <form action="/move-file" method="POST">
+                <input type="hidden" name="fileId" value="<%= file.id %>" />
+                <input type="hidden" name="folderId" value="<%= folder.id %>" />
+                
+                <span><%= file.filename %></span>
+                <button>Add to this folder</button>
+            </form>
+            <% }) %>
 </body>
 </html>

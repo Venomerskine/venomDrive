@@ -104,11 +104,13 @@ async function readFolder(req, res) {
         }
     });
 
+    const unfolderedFiles = await getUnfolderedFiles(req.user.id);
+
     if (!folder) {
         return res.status(404).send("Folder not found");
     }
 
-    res.render("partials/folder-details", { folder });
+    res.render("partials/folder-details", { folder, unfolderedFiles });
 }
 
 // Update folder
@@ -160,43 +162,79 @@ async function deleteFolder(req, res) {
     }
 }
 
+async function getUnfolderedFiles(userId) {
+    return await prisma.file.findMany({
+        where: {
+            userId,
+            folderId: null
+        }
+    });
+}
+
 // folder file upload
 async function createAndUploadFile(req, res) {
-    await prisma.file.create({
-        data: {
-            filename: req.file.filename,
+    try {
+        if (!req.file) {
+            return res.status(400).send("No file uploaded");
+        }
+        await createFile({
+            filename: req.file.originalname,
             path: req.file.path,
             userId: req.user.id,
-            folderId: req.body.folderId || null
+            folderId: req.body.folderId ? Number(req.body.folderId) : null
+
+        })
+
+        await setFileFolder(req.body.fileId, req.body.folderId);
+        res.redirect("/home");
+    } catch (err) {
+        console.error("Error creating file:", err);
     }
-})
+}
+
+async function createFile(data) {
+    return await prisma.file.create({
+        data
+    })
 }
 
 async function uploadFile(req, res) {
     try {
-        await prisma.file.update({
-            where: { id: parseInt(req.body.fileId) },
-            data: {folderId: folderId ? parseInt(folderId) : null  }
-                    });
-        console.log("folderId in uploadFile controller: ", req.body.folderId)
-        res.redirect("/home");
+        if (!req.file) {
+            return res.status(400).send("No file uploaded");
+        }
+
+        await createFile({
+            filename: req.file.originalname,
+            path: req.file.path,
+            userId: req.user.id,
+            folderId: req.body.folderId ? Number(req.body.folderId) : null
+        })
+
+        return res.redirect("/home");
+
     } catch (err) {
         console.error("Error uploading file:", err);
         res.status(500).send("Server Error!");
     }
 }
 
+
 async function moveFile(req, res) {
     try {
-        await prisma.file.update({
-            where: { id: Number(req.body.fileId) },
-            data: { folderId: Number(req.body.folderId) }
-});
+        await setFileFolder(req.body.fileId, req.body.folderId);
         res.redirect("/home");
     } catch (err) {
         console.error("Error moving file:", err);
         res.status(500).send("Server Error!");
     }
+}
+
+async function setFileFolder(fileId, folderId) {
+    return await prisma.file.update({
+        where: { id: Number(fileId) },
+        data: { folderId: folderId ? Number(folderId) : null }
+    });
 }
 
 export default {

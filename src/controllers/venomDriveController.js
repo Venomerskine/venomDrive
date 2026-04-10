@@ -161,7 +161,7 @@ async function deleteFolder(req, res) {
 }
 
 // folder file upload
-async function uploadFile(req, res) {
+async function createAndUploadFile(req, res) {
     await prisma.file.create({
         data: {
             filename: req.file.filename,
@@ -170,6 +170,21 @@ async function uploadFile(req, res) {
             folderId: req.body.folderId || null
     }
 })
+}
+
+async function uploadFile(req, res) {
+    try {
+        await prisma.file.update({
+            where: { id: parseInt(req.body.fileId) },
+            data: {
+                folderId: req.body.folderId ? parseInt(req.body.folderId) : null
+            }
+        });
+        res.redirect("/home");
+    } catch (err) {
+        console.error("Error uploading file:", err);
+        res.status(500).send("Server Error!");
+    }
 }
 
 export default {
@@ -182,6 +197,7 @@ export default {
     readFolder,
     updateFolder,
     deleteFolder,
+    createAndUploadFile,
     uploadFile,
     postFolderEdit
 }   

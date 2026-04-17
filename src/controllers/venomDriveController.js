@@ -110,6 +110,8 @@ async function readFolder(req, res) {
         return res.status(404).send("Folder not found");
     }
 
+    // console.log("Folder details:", folder.name, folder.id);
+
     res.render("partials/folder-details", { folder, unfolderedFiles });
 }
 
@@ -198,26 +200,26 @@ async function createFile(data) {
     })
 }
 
-async function uploadFile(req, res) {
-    try {
-        if (!req.file) {
-            return res.status(400).send("No file uploaded");
-        }
+// async function uploadFile(req, res) {
+//     try {
+//         if (!req.file) {
+//             return res.status(400).send("No file uploaded");
+//         }
 
-        await createFile({
-            filename: req.file.originalname,
-            path: req.file.path,
-            userId: req.user.id,
-            folderId: req.body.folderId ? Number(req.body.folderId) : null
-        })
+//         await createFile({
+//             filename: req.file.originalname,
+//             path: req.file.path,
+//             userId: req.user.id,
+//             folderId: req.body.folderId ? Number(req.body.folderId) : null
+//         })
 
-        return res.redirect("/home");
+//         return res.redirect("/home");
 
-    } catch (err) {
-        console.error("Error uploading file:", err);
-        res.status(500).send("Server Error!");
-    }
-}
+//     } catch (err) {
+//         console.error("Error uploading file:", err);
+//         res.status(500).send("Server Error!");
+//     }
+// }
 
 
 async function moveFile(req, res) {
@@ -237,6 +239,30 @@ async function setFileFolder(fileId, folderId) {
     });
 }
 
+async function uploadFile(req, res) {
+    if (!req.file) {
+        return res.status(400).send("No file uploaded");
+    }
+
+    try {
+        await prisma.file.create({
+            data: {
+                filename: req.file.originalname,
+                path: req.file.path,
+                userId: req.user.id,
+                folderId: req.body.folderId ? Number(req.body.folderId) : null
+            }
+        });
+
+        const redirectTo = req.body.redirectTo || "/home";
+        res.redirect(redirectTo);
+        // res.redirect("/home");
+    } catch (err) {
+        console.error("Error uploading file:", err);
+        res.status(500).send("Server Error!");
+    }
+}
+
 export default {
     getMemberAuth,
     entryPoint,
@@ -250,5 +276,6 @@ export default {
     createAndUploadFile,
     uploadFile,
     postFolderEdit,
-    moveFile
+    moveFile,
+    uploadFile
 }   

@@ -30,6 +30,7 @@
     <div class="upload">
         <p>Upload a new file:</p>
         <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="redirectTo" value="/home">
             <input type="file" name="file" required>
             <button type="submit">Upload</button>
         </form>

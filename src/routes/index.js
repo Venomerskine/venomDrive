@@ -54,38 +54,11 @@ router.post("/logout", (req, res) => {
 })
 
 router.post(
-  '/upload',
-  (req, res, next) => {
-    if(!req.isAuthenticated()){
-      return res.status(401).send("Unauthorized upload");
-    }
-    next()
-  },
-  upload.single('file'),
-  async (req, res) => {
-
-    if (!req.file) {
-      return res.status(400).send("No file uploaded");
-    }
-
-    // console.log("Req file in post: ", req.file.originalname)
-
-    try {
-      await prisma.file.create({
-        data: {
-          filename: req.file.originalname,
-          path: req.file.path,
-          userId: req.user.id        
-        }
-      })
-      res.redirect("/home");
-    } catch(err){
-      console.error("Error saving file to database:", err);
-      res.redirect("/home");
-    }
-
-  }
-)
+  "/upload",
+  ensureAuth,
+  upload.single("file"),
+  venomController.uploadFile
+);
 
 router.post("/create-folder", ensureAuth, venomController.createFolder);
 router.get("/read-folder/:folderId", ensureAuth, venomController.readFolder);

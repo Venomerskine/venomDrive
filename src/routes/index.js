@@ -69,5 +69,6 @@ router.post("/upload-file", ensureAuth, venomController.uploadFile);
 router.post("/move-file", ensureAuth, venomController.moveFile);
 router.get("/view/:id", ensureAuth, venomController.viewFile);
 router.get("/uploads/:id", ensureAuth, venomController.downloadFile);
+router.post("/delete-file/:id", ensureAuth, venomController.deleteFile)
 
 export default router;

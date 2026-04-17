@@ -25,6 +25,9 @@
 
                 <button>Move</button>
             </form>
+            <form action="/delete-file/<%= file.id%>" method="POST">
+                <button type="submit">Delete File</button>
+            </form>
         <% }); %>
     </ul>
 
@@ -46,6 +49,9 @@
                     <ul>
                         <% folder.files.forEach(file => { %>
                             <li><%= file.filename %></li>
+                            <form action="/delete-file/<%= file.id%>">
+                                <button type="submit">Delete File</button>
+                            </form>
                         <% }); %>
                     </ul>
                     <a href="/read-folder/<%= folder.id %>">View Folder</a>

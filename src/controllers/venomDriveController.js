@@ -200,28 +200,6 @@ async function createFile(data) {
     })
 }
 
-// async function uploadFile(req, res) {
-//     try {
-//         if (!req.file) {
-//             return res.status(400).send("No file uploaded");
-//         }
-
-//         await createFile({
-//             filename: req.file.originalname,
-//             path: req.file.path,
-//             userId: req.user.id,
-//             folderId: req.body.folderId ? Number(req.body.folderId) : null
-//         })
-
-//         return res.redirect("/home");
-
-//     } catch (err) {
-//         console.error("Error uploading file:", err);
-//         res.status(500).send("Server Error!");
-//     }
-// }
-
-
 async function moveFile(req, res) {
     try {
         await setFileFolder(req.body.fileId, req.body.folderId);
@@ -305,6 +283,20 @@ async function downloadFile(req, res) {
     }
 }
 
+async function deleteFile(req, res) {
+    try {
+        const {id } = req.params
+
+        await prisma.file.delete({
+            where: {id: Number(id)}
+        })
+        res.redirect("/home")
+    } catch (err) {
+        console.error("Error deleting file", err)
+        res.status(500).send("Error deleting file")
+    }
+}
+
 export default {
     getMemberAuth,
     entryPoint,
@@ -321,5 +313,6 @@ export default {
     moveFile,
     uploadFile,
     viewFile,
-    downloadFile
+    downloadFile,
+    deleteFile
 }   

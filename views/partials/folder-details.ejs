@@ -13,6 +13,7 @@
     <ul>
         <% folder.files.forEach(file => { %>
             <li><a href="/files/<%= file._id %>"><%= file.filename %></a></li>
+            <a href="/view/<%= file.id %>">View Details</a>
         <% }) %>
     </ul>
 
@@ -32,6 +33,7 @@
                 <input type="hidden" name="folderId" value="<%= folder.id %>" />
                 
                 <span><%= file.filename %></span>
+                <a href="/view/<%= file.id %>">View Details</a>
                 <button>Add to this folder</button>
             </form>
             <% }) %>

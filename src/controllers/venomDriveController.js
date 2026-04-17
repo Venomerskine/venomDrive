@@ -263,6 +263,48 @@ async function uploadFile(req, res) {
     }
 }
 
+async function viewFile(req, res) {
+    const { id } = req.params;
+    console.log("Viewing file with Params:", req.params);
+
+    try {
+        const file = await prisma.file.findUnique({
+            where: { id: Number(id) }
+        });
+
+    console.log("File found for viewing:", file)    
+
+
+        if (!file) {
+            return res.status(404).send("File not found");
+        }
+
+        res.render("partials/file-details", { file });
+    } catch (err) {
+        console.error("Error viewing file:", err);
+        res.status(500).send("Server Error!");
+    }
+}
+
+async function downloadFile(req, res) {
+    const { id } = req.params;
+
+    try {
+        const file = await prisma.file.findUnique({
+            where: { id: Number(id) }
+        });
+
+        if (!file) {
+            return res.status(404).send("File not found");
+        }
+
+        res.download(file.path, file.filename);
+    } catch (err) {
+        console.error("Error downloading file:", err);
+        res.status(500).send("Server Error!");
+    }
+}
+
 export default {
     getMemberAuth,
     entryPoint,
@@ -277,5 +319,7 @@ export default {
     uploadFile,
     postFolderEdit,
     moveFile,
-    uploadFile
+    uploadFile,
+    viewFile,
+    downloadFile
 }   

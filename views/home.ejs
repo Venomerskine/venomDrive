@@ -12,7 +12,8 @@
         <% user.files.forEach(file => { %>
             <% if (file.folderId) return; %>
             <li><%= file.filename %></li>
-            <a href="/uploads/<%= file.filename %>">Download</a>
+            <a href="/uploads/<%= file.id %>">Download</a>
+            <a href="/view/<%= file.id %>">View Details</a>
             <form action="/move-file" method="POST">
                 <input type="hidden" name="fileId" value="<%= file.id %>" />
   

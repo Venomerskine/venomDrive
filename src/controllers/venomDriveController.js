@@ -223,10 +223,14 @@ async function uploadFile(req, res) {
     }
 
     try {
+
+        const result = await cloudinary.uploader.upload(req.file.path);
+        
         await prisma.file.create({
             data: {
                 filename: req.file.originalname,
-                path: req.file.path,
+                // path: req.file.path,
+                url: result.secure_url,
                 userId: req.user.id,
                 folderId: req.body.folderId ? Number(req.body.folderId) : null
             }

@@ -1,0 +1,247 @@
+//Parent
+
+import React, { useState } from "react";
+import UserManagement from "./child-component";
+
+const GroupForm = ({ initialUsers = [] }) => {
+  const [users, setUsers] = useState(initialUsers);
+
+  const addUser = (newUser) => setUsers([...users, newUser]);
+
+  const deleteUser = (index) => {
+    const updatedUsers = [...users];
+    updatedUsers.splice(index, 1);
+    setUsers(updatedUsers);
+  };
+
+  const editUser = (index, editedUser) => {
+    const updatedUsers = [...users];
+    updatedUsers[index] = editedUser;
+    setUsers(updatedUsers);
+  };
+
+  const handleSubmit = (event) => {
+    // send a request to create a group with the given users
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="groupName">Group Name</label>
+        <input type="text" id="groupName" name="groupName" />
+
+        <label htmlFor="date">Date</label>
+        <input type="date" id="date" name="date" />
+
+        <button type="submit">Submit</button>
+      </form>
+      <UserManagement
+        users={users}
+        onAdd={addUser}
+        onDelete={deleteUser}
+        onEdit={editUser}
+      />
+    </>
+  );
+};
+
+export default GroupForm;
+
+//child
+import React, { useState } from "react";
+
+const UserForm = ({ user, onSubmit }) => {
+  const [name, setName] = useState(user.name ?? "");
+  const [address, setAddress] = useState(user.address ?? "");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    event.preventPropagation();
+
+    onSubmit({
+      name,
+      address,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+      />
+
+      <label htmlFor="address">Address</label>
+      <input
+        type="text"
+        id="address"
+        name="address"
+        value={address}
+        onChange={(event) => setAddress(event.target.value)}
+      />
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+const UserManagement = ({ users, onAdd, onDelete, onEdit }) => {
+  const [formOpen, setFormOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const Form = () => {
+    if (formOpen) {
+      if (selectedUser) return <UserForm onSubmit={editUser} user={{}} />;
+      else return <UserForm onSubmit={addUser} user={user[selectedUser]} />;
+    }
+    return null;
+  };
+
+  const addUser = (data) => {
+    onAdd(data);
+    setFormOpen(false);
+  };
+
+  const editUser = (data) => {
+    onEdit(selectedUser, data);
+    setSelectedUser(null);
+    setFormOpen(false);
+  };
+
+  return (
+    <>
+      <button onClick={() => setFormOpen(true)}>Add user</button>
+      <table>
+        <thead>
+          <tr>Name</tr>
+          <tr>Address</tr>
+          <tr>Action</tr>
+        </thead>
+        <tbody>
+          {users.map((user, index) => (
+            <tr>
+              <td>{user.name}</td>
+              <td>{user.address}</td>
+              <td>
+                <button
+                  onClick={() => {
+                    setSelectedUser(index);
+                    setFormOpen(true);
+                  }}
+                >
+                  Edit
+                </button>
+                <button onClick={() => onDelete(index)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Form />
+    </>
+  );
+};
+
+export default UserManagement;
+
+
+//mock
+
+let mockUser;
+let mockIndex;
+
+jest.mock("./child-component", () => ({ onAdd, onDelete, onEdit, users }) => (
+  <div>
+    <button onClick={() => onAdd(mockUser)} data-testid="addUser">
+      Add
+    </button>
+    <button
+      onClick={() => onDelete(mockIndex, mockUser)}
+      data-testid="deleteUser"
+    >
+      Delete
+    </button>
+    <button onClick={() => onEdit(mockIndex, mockUser)} data-testid="editUser">
+      Edit
+    </button>
+    <span data-testid="users">{JSON.stringify(users)}</span>
+  </div>
+));
+
+//We will also add a little test utility for quickly asserting that the users are being managed correctly.
+
+const assertUsers = (expectedUsers) => {
+  const usersSpan = screen.getByTestId("users");
+  const usersText = usersSpan.innerHTML;
+  const actualUsers = JSON.parse(usersText);
+  expect(expectedUsers).toEqual(actualUsers);
+};
+
+//Now notice how concise our tests can be.
+
+describe("GroupForm", () => {
+  it("correctly handles adding a user", () => {
+    mockUser = {
+      name: "test add user",
+      address: "test add user",
+    };
+
+    render(<GroupForm />);
+
+    const addUserButton = screen.getByTestId("addUser");
+    userEvent.click(addUserButton);
+
+    assertUsers([mockUser]);
+  });
+
+  it("correctly handles deleting a user", () => {
+    mockIndex = 1;
+    const initialUsers = [
+      {
+        name: "1",
+        address: "1",
+      },
+      {
+        name: "2",
+        address: "2",
+      },
+      {
+        name: "3",
+        address: "3",
+      },
+    ];
+
+    render(<GroupForm initialUsers={initialUsers} />);
+
+    const deleteUserButton = screen.getByTestId("deleteUser");
+    userEvent.click(deleteUserButton);
+
+    const expectedUsers = [initialUsers[0], initialUsers[2]];
+    assertUsers(expectedUsers);
+  });
+
+  it("correctly handles editing a user", () => {
+    mockIndex = 0;
+    const initialUsers = [
+      {
+        name: "initial",
+        address: "initial",
+      },
+    ];
+    mockUser = {
+      name: "edited",
+      address: "edited",
+    };
+
+    render(<GroupForm initialUsers={initialUsers} />);
+
+    const editUserButton = screen.getByTestId("editUser");
+    userEvent.click(editUserButton);
+
+    assertUsers([mockUser]);
+  });
+});

@@ -1,5 +1,6 @@
 import bcypt from 'bcrypt';
 import prisma from '../prisma.js'
+import cloudinary from '../../config/cloudinary.js';
 
 async function getMemberAuth(req, res) {
     res.render("auth.ejs")
@@ -225,7 +226,7 @@ async function uploadFile(req, res) {
     try {
 
         const result = await cloudinary.uploader.upload(req.file.path);
-        
+
         await prisma.file.create({
             data: {
                 filename: req.file.originalname,
@@ -280,7 +281,8 @@ async function downloadFile(req, res) {
             return res.status(404).send("File not found");
         }
 
-        res.download(file.path, file.filename);
+        // res.download(file.url, file.filename);
+        res.redirect(file.url);
     } catch (err) {
         console.error("Error downloading file:", err);
         res.status(500).send("Server Error!");

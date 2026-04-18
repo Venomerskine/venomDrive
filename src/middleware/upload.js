@@ -11,9 +11,9 @@ import multer from 'multer';
 
 // export const upload = multer({ storage });
 
-const upload = multer({
+export const upload = multer({
   dest: "uploads/",
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-export default { upload }
+// export default { upload }

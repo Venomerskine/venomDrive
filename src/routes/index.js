@@ -70,5 +70,7 @@ router.post("/move-file", ensureAuth, venomController.moveFile);
 router.get("/view/:id", ensureAuth, venomController.viewFile);
 router.get("/uploads/:id", ensureAuth, venomController.downloadFile);
 router.post("/delete-file/:id", ensureAuth, venomController.deleteFile)
+router.post("/create-share-link/:fileId", ensureAuth, venomController.createShareLink)
+router.get("/share/:token", venomController.viewSharedFolder)
 
 export default router;

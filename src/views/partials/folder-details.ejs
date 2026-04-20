@@ -24,13 +24,23 @@
             </ul>
         </section>
         <section>
-            <p>Add a file to this folder:</p>
-            <form action="/upload" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="redirectTo" value="/read-folder/<%= folder.id %>">
-                <input type="hidden" name="folderId" value="<%= folder.id %>">
-                <input type="file" name="file" required>
-                <button type="submit" class="btn">Upload File</button>
-            </form>
+            <div class="add">
+                <p>Add a file to this folder:</p>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="redirectTo" value="/read-folder/<%= folder.id %>">
+                    <input type="hidden" name="folderId" value="<%= folder.id %>">
+                    <input type="file" name="file" required>
+                    <button type="submit" class="btn">Upload File</button>
+                </form>
+            </div>
+            <div class="share">
+                <p>Share this folder</p>
+                <form action="/share" method="POST">
+                    <input type="hidden" name="folderId" value="123" />
+                    <input type="number" name="duration" placeholder="Days (e.g. 1, 10)" />
+                    <button type="submit">Generate Link</button>
+                </form>
+            </div>
         </section>
 
         <section>

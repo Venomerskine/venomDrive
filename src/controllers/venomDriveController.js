@@ -375,5 +375,6 @@ export default {
     viewFile,
     downloadFile,
     deleteFile,
-    createShareLink
+    createShareLink,
+    viewSharedFolder
 }   

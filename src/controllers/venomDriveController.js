@@ -1,6 +1,7 @@
 import bcypt from 'bcrypt';
 import prisma from '../prisma.js'
 import cloudinary from '../../config/cloudinary.js';
+import {v4 as uuidv4} from 'uuid';
 
 async function getMemberAuth(req, res) {
     res.render("auth.ejs")
@@ -303,6 +304,59 @@ async function deleteFile(req, res) {
     }
 }
 
+async function createShareLink(req, res) {
+    const { folderId, duration} = req.body;
+
+    const token = uuidv4();
+
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + Number(duration));
+
+    const link = await prisma.sharedLink.create({
+        data: {
+            token,
+            folderId: Number(folderId),
+            expiresAt
+        }
+    });
+
+    res.send({
+        url: `/share/${token}`
+    })
+}
+
+async function viewSharedFolder(req, res) {
+    const { token } = req.params;
+
+    try {
+        const link = await prisma.sharedLink.findUnique({
+            where: { token },
+            include: {
+                folder: {
+                    include: {
+                        files: true
+                    }
+                }
+            }
+        });
+
+        if (!link ) {
+            return res.status(404).send("Link not found");
+        }
+
+        if (new Date() > link.expiresAt) {
+            return res.status(410).send("Link expired");
+        }
+
+        res.render("shared-folder", { folder: link.folder.files });
+
+    } catch (err) {
+        console.error("Error viewing shared folder:", err);
+        res.status(500).send("Server Error!");
+    }
+}
+
+
 export default {
     getMemberAuth,
     entryPoint,
@@ -320,5 +374,6 @@ export default {
     uploadFile,
     viewFile,
     downloadFile,
-    deleteFile
+    deleteFile,
+    createShareLink
 }   

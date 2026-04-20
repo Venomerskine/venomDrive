@@ -49,3 +49,12 @@ model Folder {
   files File[]
   createdAt DateTime @default(now())
 }
+
+model SharedLink {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  fileId    Int
+  expiresAt DateTime
+
+  folder Folder? @relation(fields: [fileId], references: [id])
+}

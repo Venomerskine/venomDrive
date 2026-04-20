@@ -5,6 +5,10 @@
     padding: 0;
 }
 
+li{
+    list-style: none;
+}
+
 html, body{
     height: 100%;
 }
@@ -47,6 +51,13 @@ body{
     font-family: var(--font-family);
     background: var(--gradient);
     color: var(--text-primary);
+    height: 100vh;
+}
+
+.auth{
+    font-family: var(--font-family);
+    background: var(--gradient);
+    color: var(--text-primary);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,8 +89,134 @@ body{
     background-color: var(--bg-light);
     color: var(--text-primary);
     border: none;
+    font-size: var(--text-size-small);
+    transition: 80ms ease-in-out;
 }
 .btn:hover {
-    background-color: var(--bg-dark);
     cursor: pointer;
+    scale: 1.05;
+    transform: translate(y);
+}
+
+header{
+    display: flex;
+    flex-direction: row;
+    font-size: 10px;
+    color: var(--text-secondary);
+    padding: 30px;
+    background-color: var(--bg);
+    border-bottom: var(--border);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: var(--spacing-small);
+}
+
+section {
+    min-height: 30vh;
+    background-color: var(--bg-dark);
+    padding: var(--spacing-medium);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+    border: 1px solid var(--border);
+}
+
+.files{
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.files div{
+    width: 45%;
+    background-color: var(--bg);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.card{
+    background-color: var(--bg);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    min-width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-large);
+}
+
+.folders{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.folder-divs ul, ul{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: var(--spacing-small);
+}
+
+.card a {
+    color: var(--text-secondary);
+}
+
+.folder-actions {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-small);
+    align-items: center;
+}
+
+.red{
+    background-color: rgb(94, 4, 4);
+}
+
+.blue {
+    background-color: rgb(7, 62, 94);
+}
+
+.green {
+    background-color: rgb(2, 66, 2);
+}
+
+input {
+    background-color: var(--bg-light);
+    border: none;
+    padding: var(--spacing-small);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+}
+
+.file {
+    background-color: var(--bg);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-medium);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+    
+}
+
+.file a{
+    color: var(--text-secondary);
+}
+
+@media screen and (max-width: 600px) {
+    .files {
+        flex-direction: column;
+        gap: var(--spacing-medium);
+    }
+
+    .files div {
+        width: 100%;
+    }
+    
 }

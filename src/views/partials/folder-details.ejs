@@ -4,38 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <a href="/home"><button class="back-btn">Home</button></a>
-    <h1><%= folder.name %></h1>
-
-    <p>Files in this folder:</p>
-    <ul>
-        <% folder.files.forEach(file => { %>
-            <li><a href="/files/<%= file._id %>"><%= file.filename %></a></li>
-            <a href="/view/<%= file.id %>">View Details</a>
-        <% }) %>
-    </ul>
-
-    <p>Add a file to this folder:</p>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="redirectTo" value="/read-folder/<%= folder.id %>">
-        <input type="hidden" name="folderId" value="<%= folder.id %>">
-        <input type="file" name="file" required>
-        <button type="submit">Upload File</button>
-    </form>
-
-        <h3>Add existing file</h3>
-
-            <% unfolderedFiles.forEach(file => { %>
-            <form action="/move-file" method="POST">
-                <input type="hidden" name="fileId" value="<%= file.id %>" />
-                <input type="hidden" name="folderId" value="<%= folder.id %>" />
-                
-                <span><%= file.filename %></span>
-                <a href="/view/<%= file.id %>">View Details</a>
-                <button>Add to this folder</button>
+    <header>
+        <a href="/home"><button class="back-btn btn">Home</button></a>
+    </header>
+    <main>
+        <section>
+            <h1><%= folder.name %></h1>
+    
+            <ul>
+                <% folder.files.forEach(file => { %>
+                    <div class="file">
+                        <li><a href="/files/<%= file._id %>"><%= file.filename %></a></li>
+                        <a href="/view/<%= file.id %>">View Details</a>
+                    </div>
+                <% }) %>
+            </ul>
+        </section>
+        <section>
+            <p>Add a file to this folder:</p>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="redirectTo" value="/read-folder/<%= folder.id %>">
+                <input type="hidden" name="folderId" value="<%= folder.id %>">
+                <input type="file" name="file" required>
+                <button type="submit" class="btn">Upload File</button>
             </form>
-            <% }) %>
-</body>
+        </section>
+
+        <section>
+            <h3>Add existing file</h3>
+    
+                <% unfolderedFiles.forEach(file => { %>
+                <form action="/move-file" method="POST">
+                    <input type="hidden" name="fileId" value="<%= file.id %>" />
+                    <input type="hidden" name="folderId" value="<%= folder.id %>" />
+                    
+                    <span><%= file.filename %></span>
+                    <a href="/view/<%= file.id %>">View Details</a>
+                    <button class="btn">Add to this folder</button>
+                </form>
+                <% }) %>
+        </section>
+        
+
+    
+    
+            </main>
+    </body>
 </html>

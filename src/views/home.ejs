@@ -1,74 +1,86 @@
-<!DOCTYPE html>
+<!DOCTYPE html
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Welcome, <%= user.email %>!</h1>
-    <h2>Your Files:</h2>
-    <ul>
-        <% user.files.forEach(file => { %>
-            <% if (file.folderId) return; %>
-            <li><%= file.filename %></li>
-            <a href="/uploads/<%= file.id %>">Download</a>
-            <a href="/view/<%= file.id %>">View Details</a>
-            <form action="/move-file" method="POST">
-                <input type="hidden" name="fileId" value="<%= file.id %>" />
-  
-                <select name="folderId">
-                    <% folders.forEach(folder => { %>
-                        <option value="<%= folder.id %>"><%= folder.name %></option>
-                    <% }) %>
-                </select>
+    <header>
+        <h1><%= user.email.split('@')[0]%></h1>
+    </header>
+    <main>
 
-                <button>Move</button>
-            </form>
-            <form action="/delete-file/<%= file.id%>" method="POST">
-                <button type="submit">Delete File</button>
-            </form>
-        <% }); %>
-    </ul>
-
-    <div class="upload">
-        <p>Upload a new file:</p>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="redirectTo" value="/home">
-            <input type="file" name="file" required>
-            <button type="submit">Upload</button>
-        </form>
-    </div>
-    <div class="folders">
-        <h2>Your Folders:</h2>
-        <ul>
-            <% folders.forEach(folder => { %>
-                <div class="card">
-                    <h3><%= folder.name %></h3>
-                    <p>Files:</p>
+        <section class="files">
+            <div class="files">
+                <h2>Files</h2>
+                <ul>
+                    <% user.files.forEach(file => { %>
+                        <% if (file.folderId) return; %>
+                        <li><%= file.filename %></li>
+                        <a href="/uploads/<%= file.id %>">Download</a>
+                        <a href="/view/<%= file.id %>">View Details</a>
+                        <form action="/move-file" method="POST">
+                            <input type="hidden" name="fileId" value="<%= file.id %>" />
+            
+                            <select name="folderId">
+                                <% folders.forEach(folder => { %>
+                                    <option value="<%= folder.id %>"><%= folder.name %></option>
+                                <% }) %>
+                            </select>
+    
+                            <button class="btn blue">Move</button>
+                        </form>
+                        <form action="/delete-file/<%= file.id%>" method="POST">
+                            <button type="submit" class="btn red">Delete File</button>
+                        </form>
+                    <% }); %>
+                </ul>
+            </div>
+            <div class="upload">
+                <p>Upload a file</p>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="redirectTo" value="/home">
+                    <input type="file" name="file" required>
+                    <button type="submit" class="btn green">Upload</button>
+                </form>
+            </div>
+        </section>
+        
+        <section>
+            <div class="folders">
+                <h2>Folders</h2>
+                <div class="folder-divs">
                     <ul>
-                        <% folder.files.forEach(file => { %>
-                            <li><%= file.filename %></li>
-                            <form action="/delete-file/<%= file.id%>">
-                                <button type="submit">Delete File</button>
-                            </form>
-                        <% }); %>
-                    </ul>
-                    <a href="/read-folder/<%= folder.id %>">View Folder</a>
-                    <a href="/update-folder/<%= folder.id %>">Update Folder</a>
-                    <form action="/delete-folder/<%= folder.id %>" method="POST">
-                        <button type="submit">Delete Folder</button>
-                    </form>
+                        <% folders.forEach(folder => { %>
+                            <div class="card">
+                                <h3><%= folder.name %></h3>                                
+                                <!-- <ul>
+                                    <% folder.files.forEach(file => { %>
+                                        <li><%= file.filename %></li>                                    
+                                        <% }); %>
+                                    </ul> -->
+                                    <div class="folder-actions">
+                                        <a href="/read-folder/<%= folder.id %>">View Folder</a>
+                                        <a href="/update-folder/<%= folder.id %>">Update Folder</a>
+                                        <form action="/delete-folder/<%= folder.id %>" method="POST">
+                                            <button type="submit" class="btn red">Delete Folder</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </ul>
                 </div>
-            <% }); %>
-        </ul>
-        <div class="folder">
-            <p>Create a new folder:</p>
-            <form action="/create-folder" method="POST">
-                <input type="text" name="folderName" placeholder="Folder Name" required>
-                <button type="submit">Create Folder</button>
-            </form>
-        </div>
-    </div>
+                    <div class="folder">
+                        <p>Create a new folder:</p>
+                        <form action="/create-folder" method="POST">
+                            <input type="text" name="folderName" placeholder="Folder Name" required>
+                            <button type="submit" class="btn blue">Create Folder</button>
+                        </form>
+                    </div>
+                </div>
+        </section>
+    </main>
 </body>
 </html>

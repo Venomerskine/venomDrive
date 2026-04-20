@@ -7,15 +7,17 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div class="authWrapper">
-        <div id="loginSection" class="login">
-            <%- include('partials/login-form') %>
-        </div>
-        <div id="signUpSection" class="signUp" style="display: none;">
-            <%- include('partials/signup-form') %>
-        </div>
-        <div class="toggle-btn">
-            <button id="toggleBtn" class="btn">Switch to Sign Up</button>
+    <div class="auth">
+        <div class="authWrapper">
+            <div id="loginSection" class="login">
+                <%- include('partials/login-form') %>
+            </div>
+            <div id="signUpSection" class="signUp" style="display: none;">
+                <%- include('partials/signup-form') %>
+            </div>
+            <div class="toggle-btn">
+                <button id="toggleBtn" class="btn">Switch to Sign Up</button>
+            </div>
         </div>
     </div>
 

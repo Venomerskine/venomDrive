@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Edit Folder</h1>
-    <form action="/edit-folder" method="POST">
-        <input type="hidden" name="folderId" value="<%= folder.id %>">
-        <label for="newName">New Folder Name:</label>
-        <input type="text" id="newName" name="newName" value="<%= folder.name %>" required>
-        <button type="submit">Update Folder</button>
-    </form>
+
+    <header>
+        <a href="/home"><button class="back-btn btn">Home</button></a>
+        <h1>Edit Folder</h1>
+    </header>
+    <main>
+        <section>
+            <form action="/edit-folder" method="POST">
+                <input type="hidden" name="folderId" value="<%= folder.id %>">
+                <label for="newName">New Folder Name:</label>
+                <input type="text" id="newName" name="newName" value="<%= folder.name %>" required>
+                <button type="submit" class="btn blue">Update Folder</button>
+            </form>
+        </section>
+    </main>
 
 </body>
 </html>
